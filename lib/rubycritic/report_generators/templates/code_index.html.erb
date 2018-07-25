@@ -1,4 +1,4 @@
-<table id="js-index-table" class="index-table sortable-table">
+<table id="js-index-table" class="ui celled sortable compact small striped table index-table sortable-table">
 <thead>
   <tr>
     <th class="first-cell">Name</th>
@@ -11,9 +11,9 @@
 </thead>
 <tbody>
   <% @analysed_files.each do |analysed_file| %>
-    <tr>
-      <td class="first-cell">
-        <a href="<%= file_path(analysed_file.pathname.sub_ext('.html')) %>"><%= analysed_file.name %></a>
+    <tr class="selectable">
+      <td class="selectable first-cell">
+        <a href="<%= file_path(analysed_file.pathname.sub_ext('.html')) %>"><i class="file outline icon"></i>&nbsp;<%= analysed_file.name %></a>
       </td>
       <td class="numeric-cell"><%= analysed_file.churn %></td>
       <td class="numeric-cell"><%= analysed_file.complexity %></td>
