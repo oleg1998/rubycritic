@@ -6,8 +6,8 @@ require "rubycritic/version"
 Gem::Specification.new do |spec|
   spec.name          = "rubycritic"
   spec.version       = Rubycritic::VERSION
-  spec.authors       = ["Guilherme Simoes"]
-  spec.email         = ["guilherme.rdems@gmail.com"]
+  spec.authors       = ["Guilherme Simoes", "Oleh Budurovych"]
+  spec.email         = ["guilherme.rdems@gmail.com", "olegbudurovych@gmail.com"]
   spec.description   = <<-EOF
     Ruby Critic is a tool that detects and reports smells in Ruby classes, modules and methods.
   EOF
@@ -16,10 +16,10 @@ Gem::Specification.new do |spec|
   spec.license       = "MIT"
   spec.required_ruby_version = ">= 1.9.3"
 
-  spec.files         = `git ls-files`.split("\n")
-  spec.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
+  spec.files = Dir['lib/**/*.rb'] + Dir['bin/*']
+  spec.executables = ['rubycritic']
+  spec.require_paths = ['lib']
   spec.test_files    = `git ls-files -- test/*`.split("\n")
-  spec.require_path  = "lib"
 
   spec.add_runtime_dependency "virtus", "~> 1.0"
   spec.add_runtime_dependency "flay", "2.4.0"
