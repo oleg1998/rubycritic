@@ -50,6 +50,57 @@ module Rubycritic
       end
 
       def json_stat_file_location
+        stats = generate_statistic
+        date_generation = overview_generator.file_directory.to_s.split("/").last
+        path = Pathname.new(overview_generator.file_directory.to_s.split("/")[0...-1].join("/"))
+        if File.exists?(path + "chart_stats.json")
+          puts "File exists | Updating"
+          charts_file = File.read("#{path.to_s + '/chart_stats.json'}")
+          charts_data = JSON.parse(charts_file, :symbolize_names => true)
+          updated_charts_data = update_charts_data(charts_data, stats, date_generation)
+          File.open("#{path.to_s + '/chart_stats.json'}", "w+") {|f| f.write(updated_charts_data.to_json)}
+        else
+          puts "File doesn't exists | Creating"
+          create_chart_file(path, date_generation)
+        end
+      end
+
+      def create_chart_file(path, date_generation)
+        charts_data = {
+          "labels": [],
+          "datasets": [{
+            "label": "Churn",
+            "backgroundColor": "#f56385",
+            "data": []
+          }, {
+            "label": "Complexity",
+            "backgroundColor": "#3ba2eb",
+            "data": []
+          }, {
+            "label": "Duplication",
+            "backgroundColor": "#4bc0c0",
+            "data": []
+          }, {
+            "label": "Smells",
+            "backgroundColor": "#F0E68C",
+            "data": []
+          }]
+        }
+        stats = generate_statistic
+        updated_charts_data = update_charts_data(charts_data, stats, date_generation)
+        File.open("#{path.to_s + '/chart_stats.json'}", "w+") {|f| f.write(updated_charts_data.to_json)}
+      end
+
+      def update_charts_data(charts_data, stat, date_generation)
+        charts_data[:labels] << date_generation
+        charts_data[:datasets][0][:data] << stat[:churn]
+        charts_data[:datasets][1][:data] << stat[:complexity]
+        charts_data[:datasets][2][:data] << stat[:duplication]
+        charts_data[:datasets][3][:data] << stat[:smell]
+        charts_data
+      end
+
+      def generate_statistic
         stat = {
           churn: 0,
           complexity: 0,
@@ -62,48 +113,7 @@ module Rubycritic
           stat[:duplication] += file.duplication
           stat[:smell] += file.smells.inject(0) {|sum, i| sum += i.cost} unless file.smells.empty?
         end
-        date_generation = overview_generator.file_directory.to_s.split("/").last
-        path = Pathname.new(overview_generator.file_directory.to_s.split("/")[0...-1].join("/"))
-        if File.exists?(path + "chart_stats.json")
-          puts "File exists | Updating"
-          charts_file = File.read("#{path.to_s + '/chart_stats.json'}")
-          charts_data = JSON.parse(charts_file)
-          charts_data["labels"] << date_generation
-          charts_data["datasets"][0]["data"] << stat[:churn]
-          charts_data["datasets"][1]["data"] << stat[:complexity]
-          charts_data["datasets"][2]["data"] << stat[:duplication]
-          charts_data["datasets"][3]["data"] << stat[:smell]
-          File.open("#{path.to_s + '/chart_stats.json'}", "w+") {|f| f.write(charts_data.to_json)}
-        else
-          puts "File doesn't exists | Creating"
-          charts_data = {
-            "labels": [],
-            "datasets": [{
-              "label": "Churn",
-              "backgroundColor": "#f56385",
-              "data": []
-            }, {
-              "label": "Complexity",
-              "backgroundColor": "#3ba2eb",
-              "data": []
-            }, {
-              "label": "Duplication",
-              "backgroundColor": "#4bc0c0",
-              "data": []
-            }, {
-              "label": "Smells",
-              "backgroundColor": "#F0E68C",
-              "data": []
-            }]
-
-          }
-          charts_data[:labels] << date_generation
-          charts_data[:datasets][0][:data] << stat[:churn]
-          charts_data[:datasets][1][:data] << stat[:complexity]
-          charts_data[:datasets][2][:data] << stat[:duplication]
-          charts_data[:datasets][3][:data] << stat[:smell]
-          File.open("#{path.to_s + '/chart_stats.json'}", "w+") {|f| f.write(charts_data.to_json)}
-        end
+        return stat
       end
     end
 
