@@ -4,7 +4,6 @@ require "rubycritic/report_generators/smells_index"
 require "rubycritic/report_generators/code_index"
 require "rubycritic/report_generators/code_file"
 require 'json'
-require 'pry'
 
 module Rubycritic
   module Reporter
