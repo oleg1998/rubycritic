@@ -67,23 +67,23 @@ module Rubycritic
 
       def create_chart_file(path, date_generation)
         charts_data = {
-          "labels": [],
-          "datasets": [{
-            "label": "Churn",
-            "backgroundColor": "#f56385",
-            "data": []
+          labels: [],
+          datasets: [{
+            label: "Churn",
+            backgroundColor: "#f56385",
+            data: []
           }, {
-            "label": "Complexity",
-            "backgroundColor": "#3ba2eb",
-            "data": []
+            label: "Complexity",
+            backgroundColor: "#3ba2eb",
+            data: []
           }, {
-            "label": "Duplication",
-            "backgroundColor": "#4bc0c0",
-            "data": []
+            label: "Duplication",
+            backgroundColor: "#4bc0c0",
+            data: []
           }, {
-            "label": "Smells",
-            "backgroundColor": "#F0E68C",
-            "data": []
+            label: "Smells",
+            backgroundColor: "#F0E68C",
+            data: []
           }]
         }
         stats = generate_statistic
