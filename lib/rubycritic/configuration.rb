@@ -9,7 +9,7 @@ module Rubycritic
     attr_reader :root
 
     def initialize
-      self.root = "tmp/rubycritic"
+      self.root = "tmp/rubycritic/#{Time.now.strftime('%m-%d-%Y %H:%M:%S')}"
     end
 
     def root=(path)
